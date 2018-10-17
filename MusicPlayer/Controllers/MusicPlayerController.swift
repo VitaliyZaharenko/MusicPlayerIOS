@@ -11,7 +11,6 @@ import AVKit
 
 fileprivate struct Const {
     
-    static let startTime = "00:00"
     static let playImage = "play"
     static let pauseImage = "pause"
     static let timeFormatString = "mm:ss"
@@ -42,6 +41,7 @@ class MusicPlayerController: UIViewController {
     
     private var player: AVPlayer!
     var currentSong: Song!
+    var currentSongAsset: AVAsset!
     weak var musicPlayerDelegate: MusicPlayerDelegate!
     private var playing = false
     
@@ -57,7 +57,9 @@ class MusicPlayerController: UIViewController {
         guard let songUrl = currentSong?.url else {
             fatalError("Song url is nil")
         }
-        player = AVPlayer(url: songUrl)
+        currentSongAsset = AVURLAsset(url: songUrl)
+        
+        configurePlayer()
         configurePlayPause()
         configurePrevSongButton()
         configurePrevSongButton()
@@ -66,6 +68,15 @@ class MusicPlayerController: UIViewController {
     
     
     //MARK: - Configuration methods
+    
+    private func configurePlayer(){
+        let playerItem = AVPlayerItem(asset: currentSongAsset)
+        player = AVPlayer(playerItem: playerItem)
+        player.addPeriodicTimeObserver(forInterval: CMTimeMakeWithSeconds(1, Int32(NSEC_PER_SEC)), queue: nil) { time in
+            self.update(label: self.songCurrentTimeLabel, withTime: time)
+            self.updateSlider(time)
+        }
+    }
     
     private func configurePlayPause(){
         let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(playPauseTapped(sender:)))
@@ -93,7 +104,13 @@ class MusicPlayerController: UIViewController {
     
     private func configureSongInfoViews(){
         songLabel.text = currentSong!.name
-        songCurrentTimeLabel.text = Const.startTime
+        let startTime = kCMTimeZero
+        update(label: songCurrentTimeLabel, withTime: startTime)
+        updateSlider(kCMTimeZero)
+        
+        let endTime = currentSongAsset.duration
+        update(label: songEndTimeLabel, withTime: endTime)
+        
     }
     
     //MARK: - Callbacks
@@ -121,8 +138,33 @@ class MusicPlayerController: UIViewController {
         
 
     }
+    
+    
+    //MARK: - Actions
+    
+    @IBAction func setSongTime(_ sender: UISlider) {
+        
+        let timeAsFloat = sender.value * Float(currentSongAsset.duration.seconds)
+        let time = CMTime(seconds: timeAsFloat, preferredTimescale: )
+        player.seek(to: time, completionHandler: <#T##(Bool) -> Void#>)
+        
+    }
+    
+
+}
 
 
-
+//MARK: - Private helper methods
+extension MusicPlayerController {
+    
+    private func update(label: UILabel, withTime time: CMTime) {
+        let convertedTime = Date(timeIntervalSince1970: time.seconds)
+        label.text = Const.timeFormatter.string(from: convertedTime)
+    }
+    
+    private func updateSlider(_ time: CMTime){
+        let position = time.seconds / currentSongAsset.duration.seconds
+        songPositionSlider.value = Float(position)
+    }
 }
 

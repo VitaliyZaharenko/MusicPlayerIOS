@@ -74,6 +74,9 @@
                                     </label>
                                     <slider opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="0.5" minValue="0.0" maxValue="1" translatesAutoresizingMaskIntoConstraints="NO" id="Xlz-p9-gBH">
                                         <rect key="frame" x="116.5" y="0.0" width="122" height="31"/>
+                                        <connections>
+                                            <action selector="setSongTime:" destination="puO-34-oDR" eventType="valueChanged" id="afH-6L-iXC"/>
+                                        </connections>
                                     </slider>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="1:30" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="nk4-t6-PNm">
                                         <rect key="frame" x="236.5" y="0.0" width="118.5" height="30"/>
