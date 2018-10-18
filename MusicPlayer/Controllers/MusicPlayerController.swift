@@ -43,10 +43,15 @@ class MusicPlayerController: UIViewController {
     var currentSong: Song!
     var currentSongAsset: AVAsset!
     weak var musicPlayerDelegate: MusicPlayerDelegate!
-    private var playing = false
+    private var playing = false {
+        didSet {
+            playPauseImageView.image = playing ? pauseImage : playImage
+        }
+    }
+    private var endPlaying = false
     
-    private var playImage: UIImage!
-    private var pauseImage: UIImage!
+    private var playImage = UIImage(named: Const.playImage)
+    private var pauseImage = UIImage(named: Const.pauseImage)
     
     //MARK: - Lifecycle
     
@@ -76,6 +81,8 @@ class MusicPlayerController: UIViewController {
             self.update(label: self.songCurrentTimeLabel, withTime: time)
             self.updateSlider(time)
         }
+        NotificationCenter.default.addObserver(self, selector: #selector(MusicPlayerController.playerDidFinishPlaying(notification:)),
+                                               name: Notification.Name.AVPlayerItemDidPlayToEndTime, object: playerItem)
     }
     
     private func configurePlayPause(){
@@ -83,9 +90,6 @@ class MusicPlayerController: UIViewController {
         tapGestureRecognizer.numberOfTapsRequired = 1
         playPauseImageView.isUserInteractionEnabled = true
         playPauseImageView.addGestureRecognizer(tapGestureRecognizer)
-        
-        playImage = UIImage(named: Const.playImage)
-        pauseImage = UIImage(named: Const.pauseImage)
     }
     
     private func configurePrevSongButton(){
@@ -105,10 +109,10 @@ class MusicPlayerController: UIViewController {
     private func configureSongInfoViews(){
         songLabel.text = currentSong!.name
         let startTime = kCMTimeZero
+        let endTime = currentSongAsset.duration
+        songPositionSlider.maximumValue = Float(endTime.seconds)
         update(label: songCurrentTimeLabel, withTime: startTime)
         updateSlider(kCMTimeZero)
-        
-        let endTime = currentSongAsset.duration
         update(label: songEndTimeLabel, withTime: endTime)
         
     }
@@ -118,14 +122,17 @@ class MusicPlayerController: UIViewController {
     
     @objc private func playPauseTapped(sender: UITapGestureRecognizer){
         
+        if endPlaying {
+            endPlaying = false
+            player.seek(to: kCMTimeZero)
+        }
+        
         if !playing {
             playing = true
             player.play()
-            playPauseImageView.image = pauseImage
         } else {
             playing = false
             player.pause()
-            playPauseImageView.image = playImage
         }
         
     }
@@ -139,14 +146,19 @@ class MusicPlayerController: UIViewController {
 
     }
     
+    @objc private func playerDidFinishPlaying(notification: Notification){
+        playing = false
+        endPlaying = true
+        update(label: songCurrentTimeLabel, withTime: currentSongAsset.duration)
+    }
+    
     
     //MARK: - Actions
     
     @IBAction func setSongTime(_ sender: UISlider) {
         
-        let timeAsFloat = sender.value * Float(currentSongAsset.duration.seconds)
-        let time = CMTime(seconds: timeAsFloat, preferredTimescale: )
-        player.seek(to: time, completionHandler: <#T##(Bool) -> Void#>)
+        let time = CMTimeMakeWithSeconds(Double(sender.value), 1)
+        player.seek(to: time, completionHandler: { _ in () })
         
     }
     
@@ -163,8 +175,7 @@ extension MusicPlayerController {
     }
     
     private func updateSlider(_ time: CMTime){
-        let position = time.seconds / currentSongAsset.duration.seconds
-        songPositionSlider.value = Float(position)
+        songPositionSlider.value = Float(time.seconds)
     }
 }
 
