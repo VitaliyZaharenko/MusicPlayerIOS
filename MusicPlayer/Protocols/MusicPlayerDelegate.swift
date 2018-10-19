@@ -13,6 +13,6 @@ protocol MusicPlayerDelegate: class {
     func prevSong() -> Song
     func nextSong() -> Song
     
-    func hasPrevSong() -> Bool
-    func hasNextSong() -> Bool
+    var hasPrevSong: Bool {get}
+    var hasNextSong: Bool {get}
 }

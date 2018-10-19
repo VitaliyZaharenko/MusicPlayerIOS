@@ -61,15 +61,11 @@ class MusicPlayerController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        guard let songUrl = currentSong?.url else {
-            fatalError("Song url is nil")
-        }
-        currentSongAsset = AVURLAsset(url: songUrl)
-        
+        configureSong()
         configurePlayer()
         configurePlayPause()
-        configurePrevSongButton()
-        configurePrevSongButton()
+        configurePrevButton()
+        configureNextButton()
         configureSongInfoViews()
         
         if let coverImage = extractArtwork(from: currentSongAsset) {
@@ -77,8 +73,13 @@ class MusicPlayerController: UIViewController {
         }
     }
     
-    override func viewWillDisappear(_ animated: Bool) {
-        super.viewWillDisappear(animated)
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        startPlayingSong()
+    }
+    
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
         
         if(playing){
             playing = false
@@ -110,12 +111,25 @@ class MusicPlayerController: UIViewController {
     }
     
     @objc private func prevSongTapped(sender: UITapGestureRecognizer){
+        currentSong = musicPlayerDelegate.prevSong()
+        configureSong()
+        configurePlayer()
+        configureSongInfoViews()
+        set(button: prevSongImageView, enabled: musicPlayerDelegate.hasPrevSong)
+        set(button: nextSongImageView, enabled: musicPlayerDelegate.hasNextSong)
+        startPlayingSong()
         
     }
     
     @objc private func nextSongTapped(sender: UITapGestureRecognizer){
+        currentSong = musicPlayerDelegate.nextSong()
+        configureSong()
+        configurePlayer()
+        configureSongInfoViews()
+        set(button: prevSongImageView, enabled: musicPlayerDelegate.hasPrevSong)
+        set(button: nextSongImageView, enabled: musicPlayerDelegate.hasNextSong)
+        startPlayingSong()
         
-
     }
     
     @objc private func playerDidFinishPlaying(notification: Notification){
@@ -146,6 +160,13 @@ class MusicPlayerController: UIViewController {
 
 fileprivate extension MusicPlayerController {
     
+    private func configureSong(){
+        guard let songUrl = currentSong?.url else {
+            fatalError("Song url is nil")
+        }
+        currentSongAsset = AVURLAsset(url: songUrl)
+    }
+    
     private func configurePlayer(){
         let playerItem = AVPlayerItem(asset: currentSongAsset)
         player = AVPlayer(playerItem: playerItem)
@@ -167,18 +188,23 @@ fileprivate extension MusicPlayerController {
         playPauseImageView.addGestureRecognizer(tapGestureRecognizer)
     }
     
-    private func configurePrevSongButton(){
+    private func configurePrevButton(){
         let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(prevSongTapped(sender:)))
         tapGestureRecognizer.numberOfTapsRequired = 1
         prevSongImageView.isUserInteractionEnabled = true
         prevSongImageView.addGestureRecognizer(tapGestureRecognizer)
+        
+        set(button: prevSongImageView, enabled: musicPlayerDelegate.hasPrevSong)
+        
     }
     
-    private func configureNextSongButton(){
+    
+    private func configureNextButton(){
         let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(nextSongTapped(sender:)))
         tapGestureRecognizer.numberOfTapsRequired = 1
         nextSongImageView.isUserInteractionEnabled = true
         nextSongImageView.addGestureRecognizer(tapGestureRecognizer)
+        set(button: nextSongImageView, enabled: musicPlayerDelegate.hasNextSong)
     }
     
     private func configureSongInfoViews(){
@@ -197,6 +223,19 @@ fileprivate extension MusicPlayerController {
 //MARK: - Private Helper Methods
 
 fileprivate extension MusicPlayerController {
+    
+    private func startPlayingSong(){
+        playing = true
+        endPlaying = false
+        player.seek(to: kCMTimeZero)
+        player.play()
+    }
+    
+    private func set(button: UIImageView, enabled: Bool){
+        let tapGestureRecognizer = button.gestureRecognizers!.first!
+        tapGestureRecognizer.isEnabled = enabled
+        button.alpha = enabled ? 1.0 : 0.5
+    }
     
     private func update(label: UILabel, withTime time: CMTime) {
         let convertedTime = Date(timeIntervalSince1970: time.seconds)

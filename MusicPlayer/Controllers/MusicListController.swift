@@ -78,6 +78,7 @@ extension MusicListController: UITableViewDelegate {
         let controller = storyboard.instantiateViewController(withIdentifier: Consts.MusicPlayerController.storyboardId) as! MusicPlayerController
         let song = songFor(indexPath)
         controller.currentSong = song
+        controller.musicPlayerDelegate = self
         navigationController?.pushViewController(controller, animated: true)
         
     }
@@ -102,4 +103,56 @@ extension MusicListController: UITableViewDataSource {
         let song = songFor(indexPath)
         return setup(cell: cell, for: song)
     }
+}
+
+//MARK: - MusicPlayerDelegate
+
+extension MusicListController: MusicPlayerDelegate {
+    func prevSong() -> Song {
+        let selected = tableView.indexPathForSelectedRow!
+        let prevRow = selected.row - 1
+        
+        if 0..<songs.count ~= prevRow {
+            return selectNewRowAndReturnSong(row: prevRow, currentSelection: selected)
+        } else {
+            fatalError("Outside range, should check hasPrevSong if this call possible")
+        }
+    }
+    
+    func nextSong() -> Song {
+        
+        let selected = tableView.indexPathForSelectedRow!
+        let nextRow = selected.row + 1
+        
+        if 0..<songs.count ~= nextRow {
+            return selectNewRowAndReturnSong(row: nextRow, currentSelection: selected)
+        } else {
+            fatalError("Outside range, should check hasNextSong if this call psossible")
+        }
+    }
+    
+    var hasPrevSong: Bool {
+        get {
+            let selected = tableView.indexPathForSelectedRow!
+            let prevRow = selected.row - 1
+            return 0..<songs.count ~= prevRow
+        }
+    }
+    
+    var hasNextSong: Bool {
+        get {
+            let selected = tableView.indexPathForSelectedRow!
+            let nextRow = selected.row + 1
+            return 0..<songs.count ~= nextRow
+        }
+    }
+    
+    
+    private func selectNewRowAndReturnSong(row: Int, currentSelection path: IndexPath) -> Song {
+        let newSelection = IndexPath(row: row, section: path.section)
+        tableView.selectRow(at: newSelection, animated: true, scrollPosition: .none)
+        return songFor(newSelection)
+    }
+    
+    
 }
