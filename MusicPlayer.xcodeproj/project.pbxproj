@@ -7,6 +7,12 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		A35E68F32179FC48001BD38F /* portugal man - feel it still.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = A35E68F22179FC48001BD38F /* portugal man - feel it still.mp3 */; };
+		A35E68F52179FC51001BD38F /* TheXFilestheme.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = A35E68F42179FC51001BD38F /* TheXFilestheme.mp3 */; };
+		A35E68F72179FCA3001BD38F /* hans zimmer no time for caution.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = A35E68F62179FCA2001BD38F /* hans zimmer no time for caution.mp3 */; };
+		A35E68F92179FCA8001BD38F /* Песняры – Косил Ясь Конюшину.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = A35E68F82179FCA8001BD38F /* Песняры – Косил Ясь Конюшину.mp3 */; };
+		A35E6903217A075D001BD38F /* SongCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A35E6901217A075D001BD38F /* SongCell.swift */; };
+		A35E6904217A075D001BD38F /* SongCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = A35E6902217A075D001BD38F /* SongCell.xib */; };
 		F84BF83C2171506A00A7D8DB /* MusicListController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F84BF83B2171506A00A7D8DB /* MusicListController.swift */; };
 		F84BF83F2172329400A7D8DB /* SongManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F84BF83E2172329400A7D8DB /* SongManager.swift */; };
 		F84BF841217232DA00A7D8DB /* Song.swift in Sources */ = {isa = PBXBuildFile; fileRef = F84BF840217232DA00A7D8DB /* Song.swift */; };
@@ -19,7 +25,6 @@
 		F8B8DFC921710D4000618E4C /* MusicPlayerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8B8DFC821710D4000618E4C /* MusicPlayerTests.swift */; };
 		F8B8DFD421710D4100618E4C /* MusicPlayerUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8B8DFD321710D4100618E4C /* MusicPlayerUITests.swift */; };
 		F8B8DFE52171105100618E4C /* AVKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F8B8DFE42171105100618E4C /* AVKit.framework */; };
-		F8B8DFE82171119500618E4C /* TheXFilestheme.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = F8B8DFE72171119500618E4C /* TheXFilestheme.mp3 */; };
 		F8B8DFEB217111D400618E4C /* Consts.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8B8DFEA217111D400618E4C /* Consts.swift */; };
 /* End PBXBuildFile section */
 
@@ -41,6 +46,12 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		A35E68F22179FC48001BD38F /* portugal man - feel it still.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = "portugal man - feel it still.mp3"; sourceTree = "<group>"; };
+		A35E68F42179FC51001BD38F /* TheXFilestheme.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = TheXFilestheme.mp3; sourceTree = "<group>"; };
+		A35E68F62179FCA2001BD38F /* hans zimmer no time for caution.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = "hans zimmer no time for caution.mp3"; sourceTree = "<group>"; };
+		A35E68F82179FCA8001BD38F /* Песняры – Косил Ясь Конюшину.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = "Песняры – Косил Ясь Конюшину.mp3"; sourceTree = "<group>"; };
+		A35E6901217A075D001BD38F /* SongCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SongCell.swift; sourceTree = "<group>"; };
+		A35E6902217A075D001BD38F /* SongCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SongCell.xib; sourceTree = "<group>"; };
 		F84BF83B2171506A00A7D8DB /* MusicListController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MusicListController.swift; sourceTree = "<group>"; };
 		F84BF83E2172329400A7D8DB /* SongManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SongManager.swift; sourceTree = "<group>"; };
 		F84BF840217232DA00A7D8DB /* Song.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Song.swift; sourceTree = "<group>"; };
@@ -59,7 +70,6 @@
 		F8B8DFD321710D4100618E4C /* MusicPlayerUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MusicPlayerUITests.swift; sourceTree = "<group>"; };
 		F8B8DFD521710D4100618E4C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		F8B8DFE42171105100618E4C /* AVKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVKit.framework; path = System/Library/Frameworks/AVKit.framework; sourceTree = SDKROOT; };
-		F8B8DFE72171119500618E4C /* TheXFilestheme.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = TheXFilestheme.mp3; sourceTree = "<group>"; };
 		F8B8DFEA217111D400618E4C /* Consts.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Consts.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -89,11 +99,21 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		F84BF83A2171503400A7D8DB /* Views */ = {
+		A35E68FF217A075D001BD38F /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				A35E6900217A075D001BD38F /* Cells */,
 			);
 			path = Views;
+			sourceTree = "<group>";
+		};
+		A35E6900217A075D001BD38F /* Cells */ = {
+			isa = PBXGroup;
+			children = (
+				A35E6901217A075D001BD38F /* SongCell.swift */,
+				A35E6902217A075D001BD38F /* SongCell.xib */,
+			);
+			path = Cells;
 			sourceTree = "<group>";
 		};
 		F84BF83D2172326F00A7D8DB /* Models */ = {
@@ -138,12 +158,12 @@
 			isa = PBXGroup;
 			children = (
 				F8B8DFE9217111C200618E4C /* Const */,
-				F84BF83A2171503400A7D8DB /* Views */,
 				F8B8DFE121710DD700618E4C /* Controllers */,
-				F8B8DFB321710D4000618E4C /* AppDelegate.swift */,
+				A35E68FF217A075D001BD38F /* Views */,
 				F84BF83D2172326F00A7D8DB /* Models */,
 				F84BF8422172348100A7D8DB /* Protocols */,
 				F8B8DFE221710DE800618E4C /* Storyboards */,
+				F8B8DFB321710D4000618E4C /* AppDelegate.swift */,
 				F8B8DFE62171115700618E4C /* AudioFiles */,
 				F8B8DFBF21710D4000618E4C /* Info.plist */,
 				F8B8DFBA21710D4000618E4C /* Assets.xcassets */,
@@ -198,7 +218,10 @@
 		F8B8DFE62171115700618E4C /* AudioFiles */ = {
 			isa = PBXGroup;
 			children = (
-				F8B8DFE72171119500618E4C /* TheXFilestheme.mp3 */,
+				A35E68F82179FCA8001BD38F /* Песняры – Косил Ясь Конюшину.mp3 */,
+				A35E68F62179FCA2001BD38F /* hans zimmer no time for caution.mp3 */,
+				A35E68F42179FC51001BD38F /* TheXFilestheme.mp3 */,
+				A35E68F22179FC48001BD38F /* portugal man - feel it still.mp3 */,
 			);
 			path = AudioFiles;
 			sourceTree = "<group>";
@@ -318,10 +341,14 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A35E68F52179FC51001BD38F /* TheXFilestheme.mp3 in Resources */,
+				A35E68F32179FC48001BD38F /* portugal man - feel it still.mp3 in Resources */,
 				F8B8DFBE21710D4000618E4C /* LaunchScreen.storyboard in Resources */,
 				F8B8DFBB21710D4000618E4C /* Assets.xcassets in Resources */,
+				A35E6904217A075D001BD38F /* SongCell.xib in Resources */,
 				F8B8DFB921710D4000618E4C /* Main.storyboard in Resources */,
-				F8B8DFE82171119500618E4C /* TheXFilestheme.mp3 in Resources */,
+				A35E68F72179FCA3001BD38F /* hans zimmer no time for caution.mp3 in Resources */,
+				A35E68F92179FCA8001BD38F /* Песняры – Косил Ясь Конюшину.mp3 in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -352,6 +379,7 @@
 				F84BF83C2171506A00A7D8DB /* MusicListController.swift in Sources */,
 				F84BF83F2172329400A7D8DB /* SongManager.swift in Sources */,
 				F8B8DFEB217111D400618E4C /* Consts.swift in Sources */,
+				A35E6903217A075D001BD38F /* SongCell.swift in Sources */,
 				F8B8DFB421710D4000618E4C /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

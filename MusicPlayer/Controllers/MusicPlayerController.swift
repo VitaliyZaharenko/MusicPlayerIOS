@@ -19,6 +19,9 @@ fileprivate struct Const {
         formatter.dateFormat = Const.timeFormatString
         return formatter
     } ()
+    static let maxDifferenceToNotUpdateSlider: Float = 1.1
+    static let sliderUpdateTimeSeconds = 0.2
+    static let artworkMetadataKey = "artwork"
 }
 
 class MusicPlayerController: UIViewController {
@@ -58,7 +61,6 @@ class MusicPlayerController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        currentSong = SongManager.shared.all().first
         guard let songUrl = currentSong?.url else {
             fatalError("Song url is nil")
         }
@@ -69,17 +71,90 @@ class MusicPlayerController: UIViewController {
         configurePrevSongButton()
         configurePrevSongButton()
         configureSongInfoViews()
+        
+        if let coverImage = extractArtwork(from: currentSongAsset) {
+            songCoverImageView.image = coverImage
+        }
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        
+        if(playing){
+            playing = false
+            player.pause()
+        }
     }
     
     
-    //MARK: - Configuration methods
+    //MARK: - Callbacks
+    
+    
+    @objc private func playPauseTapped(sender: UITapGestureRecognizer){
+        
+        if endPlaying {
+            endPlaying = false
+            updateSlider(kCMTimeZero)
+            player.seek(to: kCMTimeZero)
+            
+        }
+        
+        if !playing {
+            playing = true
+            player.play()
+        } else {
+            playing = false
+            player.pause()
+        }
+        
+    }
+    
+    @objc private func prevSongTapped(sender: UITapGestureRecognizer){
+        
+    }
+    
+    @objc private func nextSongTapped(sender: UITapGestureRecognizer){
+        
+
+    }
+    
+    @objc private func playerDidFinishPlaying(notification: Notification){
+        playing = false
+        endPlaying = true
+        update(label: songCurrentTimeLabel, withTime: currentSongAsset.duration)
+    }
+    
+    
+    //MARK: - Actions
+    
+    @IBAction func setSongTime(_ sender: UISlider, forEvent event: UIEvent) {
+        let time = CMTimeMakeWithSeconds(Double(sender.value), 1)
+        update(label: songCurrentTimeLabel, withTime: time)
+        if let touchEvent = event.allTouches?.first {
+            switch touchEvent.phase {
+            case .ended:
+                player.seek(to: time, completionHandler: { _ in () })
+            default:
+                break
+            }
+        }
+    }
+}
+
+
+//MARK: - Configuration Methods
+
+fileprivate extension MusicPlayerController {
     
     private func configurePlayer(){
         let playerItem = AVPlayerItem(asset: currentSongAsset)
         player = AVPlayer(playerItem: playerItem)
-        player.addPeriodicTimeObserver(forInterval: CMTimeMakeWithSeconds(1, Int32(NSEC_PER_SEC)), queue: nil) { time in
+        player.addPeriodicTimeObserver(forInterval: CMTimeMakeWithSeconds(Const.sliderUpdateTimeSeconds, Int32(NSEC_PER_SEC)), queue: nil) { time in
             self.update(label: self.songCurrentTimeLabel, withTime: time)
-            self.updateSlider(time)
+            let difference = abs(self.songPositionSlider.value - Float(time.seconds))
+            if difference < Const.maxDifferenceToNotUpdateSlider {
+                self.updateSlider(time)
+            }
         }
         NotificationCenter.default.addObserver(self, selector: #selector(MusicPlayerController.playerDidFinishPlaying(notification:)),
                                                name: Notification.Name.AVPlayerItemDidPlayToEndTime, object: playerItem)
@@ -116,58 +191,12 @@ class MusicPlayerController: UIViewController {
         update(label: songEndTimeLabel, withTime: endTime)
         
     }
-    
-    //MARK: - Callbacks
-    
-    
-    @objc private func playPauseTapped(sender: UITapGestureRecognizer){
-        
-        if endPlaying {
-            endPlaying = false
-            player.seek(to: kCMTimeZero)
-        }
-        
-        if !playing {
-            playing = true
-            player.play()
-        } else {
-            playing = false
-            player.pause()
-        }
-        
-    }
-    
-    @objc private func prevSongTapped(sender: UITapGestureRecognizer){
-        
-    }
-    
-    @objc private func nextSongTapped(sender: UITapGestureRecognizer){
-        
-
-    }
-    
-    @objc private func playerDidFinishPlaying(notification: Notification){
-        playing = false
-        endPlaying = true
-        update(label: songCurrentTimeLabel, withTime: currentSongAsset.duration)
-    }
-    
-    
-    //MARK: - Actions
-    
-    @IBAction func setSongTime(_ sender: UISlider) {
-        
-        let time = CMTimeMakeWithSeconds(Double(sender.value), 1)
-        player.seek(to: time, completionHandler: { _ in () })
-        
-    }
-    
-
 }
 
 
-//MARK: - Private helper methods
-extension MusicPlayerController {
+//MARK: - Private Helper Methods
+
+fileprivate extension MusicPlayerController {
     
     private func update(label: UILabel, withTime time: CMTime) {
         let convertedTime = Date(timeIntervalSince1970: time.seconds)
@@ -176,6 +205,20 @@ extension MusicPlayerController {
     
     private func updateSlider(_ time: CMTime){
         songPositionSlider.value = Float(time.seconds)
+    }
+    
+    private func extractArtwork(from asset: AVAsset) -> UIImage? {
+        let metadata = asset.metadata
+        for item in metadata {
+            if let key = item.commonKey?._rawValue as String?, key == Const.artworkMetadataKey {
+                guard let data = item.dataValue else {
+                    return nil
+                }
+                
+                return UIImage(data: data)
+            }
+        }
+        return nil
     }
 }
 

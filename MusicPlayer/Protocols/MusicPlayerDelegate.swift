@@ -10,6 +10,9 @@ import Foundation
 
 protocol MusicPlayerDelegate: class {
     
-    func prevSong() -> Song?
-    func nextSong() -> Song?
+    func prevSong() -> Song
+    func nextSong() -> Song
+    
+    func hasPrevSong() -> Bool
+    func hasNextSong() -> Bool
 }

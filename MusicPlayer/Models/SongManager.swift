@@ -19,6 +19,9 @@ class SongManager {
     
     
     private func predefinedSongs() -> [Song] {
-        return [Song(filename: Consts.StaticMp3.XFilesTheme)]
+        return [Song(filename: Consts.StaticMp3.xFilesTheme),
+                Song(filename: Consts.StaticMp3.feelItStill),
+                Song(filename: Consts.StaticMp3.noTimeForCaution),
+                Song(filename: Consts.StaticMp3.kosilYasKonushinu)]
     }
 }
