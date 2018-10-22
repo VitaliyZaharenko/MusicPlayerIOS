@@ -26,6 +26,9 @@
 		F8B8DFD421710D4100618E4C /* MusicPlayerUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8B8DFD321710D4100618E4C /* MusicPlayerUITests.swift */; };
 		F8B8DFE52171105100618E4C /* AVKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F8B8DFE42171105100618E4C /* AVKit.framework */; };
 		F8B8DFEB217111D400618E4C /* Consts.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8B8DFEA217111D400618E4C /* Consts.swift */; };
+		F8E930BC217DEB24002202CA /* RootViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8E930BB217DEB24002202CA /* RootViewController.swift */; };
+		F8E930C0217E0BF1002202CA /* MusicPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8E930BF217E0BF1002202CA /* MusicPlayer.swift */; };
+		F8E930C2217E16FD002202CA /* MusicListDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8E930C1217E16FD002202CA /* MusicListDelegate.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -71,6 +74,9 @@
 		F8B8DFD521710D4100618E4C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		F8B8DFE42171105100618E4C /* AVKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVKit.framework; path = System/Library/Frameworks/AVKit.framework; sourceTree = SDKROOT; };
 		F8B8DFEA217111D400618E4C /* Consts.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Consts.swift; sourceTree = "<group>"; };
+		F8E930BB217DEB24002202CA /* RootViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootViewController.swift; sourceTree = "<group>"; };
+		F8E930BF217E0BF1002202CA /* MusicPlayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MusicPlayer.swift; sourceTree = "<group>"; };
+		F8E930C1217E16FD002202CA /* MusicListDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MusicListDelegate.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -129,6 +135,8 @@
 			isa = PBXGroup;
 			children = (
 				F84BF843217234A600A7D8DB /* MusicPlayerDelegate.swift */,
+				F8E930BF217E0BF1002202CA /* MusicPlayer.swift */,
+				F8E930C1217E16FD002202CA /* MusicListDelegate.swift */,
 			);
 			path = Protocols;
 			sourceTree = "<group>";
@@ -194,6 +202,7 @@
 			children = (
 				F84BF83B2171506A00A7D8DB /* MusicListController.swift */,
 				F8B8DFB521710D4000618E4C /* MusicPlayerController.swift */,
+				F8E930BB217DEB24002202CA /* RootViewController.swift */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -375,11 +384,14 @@
 			files = (
 				F84BF841217232DA00A7D8DB /* Song.swift in Sources */,
 				F84BF844217234A600A7D8DB /* MusicPlayerDelegate.swift in Sources */,
+				F8E930BC217DEB24002202CA /* RootViewController.swift in Sources */,
+				F8E930C2217E16FD002202CA /* MusicListDelegate.swift in Sources */,
 				F8B8DFB621710D4000618E4C /* MusicPlayerController.swift in Sources */,
 				F84BF83C2171506A00A7D8DB /* MusicListController.swift in Sources */,
 				F84BF83F2172329400A7D8DB /* SongManager.swift in Sources */,
 				F8B8DFEB217111D400618E4C /* Consts.swift in Sources */,
 				A35E6903217A075D001BD38F /* SongCell.swift in Sources */,
+				F8E930C0217E0BF1002202CA /* MusicPlayer.swift in Sources */,
 				F8B8DFB421710D4000618E4C /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

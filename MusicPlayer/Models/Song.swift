@@ -21,3 +21,12 @@ struct Song {
         self.name = filename
     }
 }
+
+
+//MARK: - Equatable
+extension Song: Equatable {
+    
+    static func == (lhs: Song, rhs: Song) -> Bool {
+        return lhs.url == rhs.url
+    }
+}

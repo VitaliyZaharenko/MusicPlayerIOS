@@ -17,10 +17,6 @@ struct Consts {
         static let feelItStill = "portugal man - feel it still"
     }
     
-    struct Segues {
-        
-        static let playSong = "playSongSegueId"
-    }
     
     struct Storyboards {
         static let main = "Main"
@@ -34,7 +30,12 @@ struct Consts {
         }
     }
     
+    struct MusicListController {
+        static let navbarTitle = "Song List"
+    }
+    
     struct MusicPlayerController {
+        static let navbarTitle = "Player"
         static let storyboardId = "MusicPlayerControllerId"
     }
     

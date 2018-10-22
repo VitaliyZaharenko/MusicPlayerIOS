@@ -8,11 +8,6 @@
 
 import UIKit
 
-fileprivate struct Const {
-    
-    static let navBarTitle = "All songs"
-}
-
 
 class MusicListController: UIViewController {
     
@@ -24,6 +19,8 @@ class MusicListController: UIViewController {
     
     private var songs = [Song]()
     
+    var musicListDelegate: MusicListDelegate?
+    
     //MARK: - Lifecycle Methods
     
     override func viewDidLoad() {
@@ -31,7 +28,6 @@ class MusicListController: UIViewController {
         
         songs = SongManager.shared.all()
         
-        configureNavbar()
         configureTableView()
         
     }
@@ -41,9 +37,7 @@ class MusicListController: UIViewController {
 //MARK: - Configuration Methods
 
 fileprivate extension MusicListController {
-    private func configureNavbar(){
-        navigationItem.title = Const.navBarTitle
-    }
+    
     
     private func configureTableView(){
         let nib = UINib(nibName: Consts.Cells.SongCell.xib, bundle: nil)
@@ -74,12 +68,8 @@ fileprivate extension MusicListController {
 extension MusicListController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let storyboard = UIStoryboard(name: Consts.Storyboards.main, bundle: Bundle.main)
-        let controller = storyboard.instantiateViewController(withIdentifier: Consts.MusicPlayerController.storyboardId) as! MusicPlayerController
         let song = songFor(indexPath)
-        controller.currentSong = song
-        controller.musicPlayerDelegate = self
-        navigationController?.pushViewController(controller, animated: true)
+        musicListDelegate?.songSelected(song: song)
         
     }
 }

@@ -13,6 +13,7 @@ fileprivate struct Const {
     
     static let playImage = "play"
     static let pauseImage = "pause"
+    static let noArtworkImage = "music"
     static let timeFormatString = "mm:ss"
     static let timeFormatter: DateFormatter = {
         let formatter = DateFormatter()
@@ -22,6 +23,7 @@ fileprivate struct Const {
     static let maxDifferenceToNotUpdateSlider: Float = 1.1
     static let sliderUpdateTimeSeconds = 0.2
     static let artworkMetadataKey = "artwork"
+    static let noSong = "No Song"
 }
 
 class MusicPlayerController: UIViewController {
@@ -43,47 +45,40 @@ class MusicPlayerController: UIViewController {
     //MARK: - Properties
     
     private var player: AVPlayer!
-    var currentSong: Song!
+    var currentSong: Song?
     var currentSongAsset: AVAsset!
-    weak var musicPlayerDelegate: MusicPlayerDelegate!
+    weak var musicPlayerDelegate: MusicPlayerDelegate?
     private var playing = false {
         didSet {
             playPauseImageView.image = playing ? pauseImage : playImage
         }
     }
-    private var endPlaying = false
+    private var endPlaying = true
     
     private var playImage = UIImage(named: Const.playImage)
     private var pauseImage = UIImage(named: Const.pauseImage)
+    private var noArtworkImage = UIImage(named: Const.noArtworkImage)
     
     //MARK: - Lifecycle
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        configureSong()
-        configurePlayer()
         configurePlayPause()
         configurePrevButton()
         configureNextButton()
         configureSongInfoViews()
         
-        if let coverImage = extractArtwork(from: currentSongAsset) {
-            songCoverImageView.image = coverImage
+        if currentSong != nil {
+            configureSong()
+            configurePlayer()
         }
     }
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        startPlayingSong()
-    }
-    
-    override func viewDidDisappear(_ animated: Bool) {
-        super.viewDidDisappear(animated)
-        
-        if(playing){
-            playing = false
-            player.pause()
+        if currentSong != nil {
+            startPlayingSong()
         }
     }
     
@@ -93,42 +88,30 @@ class MusicPlayerController: UIViewController {
     
     @objc private func playPauseTapped(sender: UITapGestureRecognizer){
         
+        guard currentSongAsset != nil else {
+            return
+        }
+        
         if endPlaying {
-            endPlaying = false
-            updateSlider(kCMTimeZero)
-            player.seek(to: kCMTimeZero)
-            
-        }
-        
-        if !playing {
-            playing = true
-            player.play()
+            startPlayingSong()
         } else {
-            playing = false
-            player.pause()
+            if !playing {
+                continuePlayingSong()
+            } else {
+                pauseSong()
+            }
         }
-        
     }
     
     @objc private func prevSongTapped(sender: UITapGestureRecognizer){
-        currentSong = musicPlayerDelegate.prevSong()
-        configureSong()
-        configurePlayer()
-        configureSongInfoViews()
-        set(button: prevSongImageView, enabled: musicPlayerDelegate.hasPrevSong)
-        set(button: nextSongImageView, enabled: musicPlayerDelegate.hasNextSong)
-        startPlayingSong()
+        let newSong = musicPlayerDelegate?.prevSong()
+        play(song: newSong)
         
     }
     
     @objc private func nextSongTapped(sender: UITapGestureRecognizer){
-        currentSong = musicPlayerDelegate.nextSong()
-        configureSong()
-        configurePlayer()
-        configureSongInfoViews()
-        set(button: prevSongImageView, enabled: musicPlayerDelegate.hasPrevSong)
-        set(button: nextSongImageView, enabled: musicPlayerDelegate.hasNextSong)
-        startPlayingSong()
+        let newSong = musicPlayerDelegate?.nextSong()
+        play(song: newSong)
         
     }
     
@@ -142,6 +125,11 @@ class MusicPlayerController: UIViewController {
     //MARK: - Actions
     
     @IBAction func setSongTime(_ sender: UISlider, forEvent event: UIEvent) {
+        
+        guard currentSongAsset != nil else {
+            return
+        }
+        
         let time = CMTimeMakeWithSeconds(Double(sender.value), 1)
         update(label: songCurrentTimeLabel, withTime: time)
         if let touchEvent = event.allTouches?.first {
@@ -193,8 +181,7 @@ fileprivate extension MusicPlayerController {
         tapGestureRecognizer.numberOfTapsRequired = 1
         prevSongImageView.isUserInteractionEnabled = true
         prevSongImageView.addGestureRecognizer(tapGestureRecognizer)
-        
-        set(button: prevSongImageView, enabled: musicPlayerDelegate.hasPrevSong)
+        set(button: prevSongImageView, enabled: musicPlayerDelegate?.hasPrevSong ?? false)
         
     }
     
@@ -204,17 +191,24 @@ fileprivate extension MusicPlayerController {
         tapGestureRecognizer.numberOfTapsRequired = 1
         nextSongImageView.isUserInteractionEnabled = true
         nextSongImageView.addGestureRecognizer(tapGestureRecognizer)
-        set(button: nextSongImageView, enabled: musicPlayerDelegate.hasNextSong)
+        set(button: nextSongImageView, enabled: musicPlayerDelegate?.hasNextSong ?? false)
     }
     
     private func configureSongInfoViews(){
-        songLabel.text = currentSong!.name
+        songLabel.text = currentSong?.name ?? Const.noSong
         let startTime = kCMTimeZero
-        let endTime = currentSongAsset.duration
-        songPositionSlider.maximumValue = Float(endTime.seconds)
         update(label: songCurrentTimeLabel, withTime: startTime)
         updateSlider(kCMTimeZero)
-        update(label: songEndTimeLabel, withTime: endTime)
+        if let currentSongAsset = currentSongAsset{
+            let endTime = currentSongAsset.duration
+            songPositionSlider.maximumValue = Float(endTime.seconds)
+            update(label: songEndTimeLabel, withTime: endTime)
+            if let coverImage = extractArtwork(from: currentSongAsset) {
+                songCoverImageView.image = coverImage
+            } else {
+                songCoverImageView.image = noArtworkImage
+            }
+        }
         
     }
 }
@@ -228,8 +222,20 @@ fileprivate extension MusicPlayerController {
         playing = true
         endPlaying = false
         player.seek(to: kCMTimeZero)
+        updateSlider(kCMTimeZero)
         player.play()
     }
+    
+    private func continuePlayingSong(){
+        playing = true
+        player.play()
+    }
+    
+    private func pauseSong(){
+        playing = false
+        player.pause()
+    }
+    
     
     private func set(button: UIImageView, enabled: Bool){
         let tapGestureRecognizer = button.gestureRecognizers!.first!
@@ -258,6 +264,27 @@ fileprivate extension MusicPlayerController {
             }
         }
         return nil
+    }
+}
+
+
+//MARK: - MusicPlayer
+
+extension MusicPlayerController: MusicPlayer {
+    func play(song: Song? = nil) {
+        
+        self.currentSong = song
+        configureSong()
+        configurePlayer()
+        configureSongInfoViews()
+        set(button: prevSongImageView, enabled: musicPlayerDelegate?.hasPrevSong ?? false)
+        set(button: nextSongImageView, enabled: musicPlayerDelegate?.hasNextSong ?? false)
+        startPlayingSong()
+    }
+    
+    
+    func pause(){
+        pauseSong()
     }
 }
 
