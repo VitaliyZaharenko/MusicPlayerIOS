@@ -52,12 +52,24 @@ class RootViewController: UIViewController {
             updateUI()
         }
     }
+    
+    private var editButtonTintColor: UIColor?
+    
+    //MARK: - Lifecycle
 
     override func viewDidLoad() {
         super.viewDidLoad()
         
         findChildControllers()
         setupChildControllers()
+        
+        navigationItem.leftBarButtonItem = editButtonItem
+        editButtonTintColor = navigationItem.leftBarButtonItem?.tintColor
+    }
+    
+    override func setEditing(_ editing: Bool, animated: Bool) {
+        super.setEditing(editing, animated: animated)
+        songListController.setEditing(editing, animated: animated)
     }
     
     
@@ -96,6 +108,7 @@ fileprivate extension RootViewController {
         self.songPlayerController = player
     }
     
+    
     private func setupChildControllers(){
         songListController.musicListDelegate = self
         songPlayerController.musicPlayerDelegate = songListController
@@ -108,11 +121,15 @@ fileprivate extension RootViewController {
             songPlayerContainerView.isHidden = true
             songListContainerView.isHidden = false
             navigationItem.title = Consts.MusicListController.navbarTitle
+            navigationItem.leftBarButtonItem?.isEnabled = true
+            navigationItem.leftBarButtonItem?.tintColor = editButtonTintColor
             toggleSongListBarItem.image = barItemToggleListImageActive
         case .MusicPlayer:
             songPlayerContainerView.isHidden = false
             songListContainerView.isHidden = true
             navigationItem.title = Consts.MusicPlayerController.navbarTitle
+            navigationItem.leftBarButtonItem?.isEnabled = false
+            navigationItem.leftBarButtonItem?.tintColor = UIColor.clear
             toggleSongListBarItem.image = barItemToggleListImageInactive
         }
     }

@@ -32,6 +32,11 @@ class MusicListController: UIViewController {
         
     }
     
+    override func setEditing(_ editing: Bool, animated: Bool) {
+        super.setEditing(editing, animated: animated)
+        tableView.setEditing(editing, animated: animated)
+    }
+    
 }
 
 //MARK: - Configuration Methods
@@ -71,6 +76,21 @@ extension MusicListController: UITableViewDelegate {
         let song = songFor(indexPath)
         musicListDelegate?.songSelected(song: song)
         
+    }
+    
+    func tableView(_ tableView: UITableView, editingStyleForRowAt indexPath: IndexPath) -> UITableViewCellEditingStyle {
+        return .none
+    }
+    
+    func tableView(_ tableView: UITableView, shouldIndentWhileEditingRowAt indexPath: IndexPath) -> Bool {
+        return false
+    }
+    
+    func tableView(_ tableView: UITableView, moveRowAt sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath) {
+        let song1 = songs[sourceIndexPath.row]
+        let song2 = songs[destinationIndexPath.row]
+        songs[sourceIndexPath.row] = song2
+        songs[destinationIndexPath.row] = song1
     }
 }
 
