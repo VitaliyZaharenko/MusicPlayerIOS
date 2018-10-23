@@ -9,7 +9,7 @@
 import Foundation
 
 
-protocol MusicListDelegate {
+protocol MusicListDelegate: class {
     
     func songSelected(song: Song)
 }

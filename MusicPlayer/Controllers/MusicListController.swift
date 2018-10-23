@@ -19,7 +19,7 @@ class MusicListController: UIViewController {
     
     private var songs = [Song]()
     
-    var musicListDelegate: MusicListDelegate?
+    weak var musicListDelegate: MusicListDelegate?
     
     //MARK: - Lifecycle Methods
     

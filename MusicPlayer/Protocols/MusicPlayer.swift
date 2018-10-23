@@ -8,7 +8,7 @@
 
 import Foundation
 
-protocol MusicPlayer {
+protocol MusicPlayer: class {
     
     func play(song: Song?)
     func pause()
